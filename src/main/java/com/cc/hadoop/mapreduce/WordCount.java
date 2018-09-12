@@ -53,6 +53,13 @@ public class WordCount {
         }
     }
 
+    /**
+     * mapreduce 作业的所有信息
+     * @param args
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws InterruptedException
+     */
     public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
         Configuration configuration = new Configuration();
 
@@ -64,21 +71,29 @@ public class WordCount {
             System.out.println("output file exists, but is has deleted");
         }
 
-
+        //创建工作
         Job job = Job.getInstance(configuration,"wordcount");
 
+        //设置执行主类
         job.setJarByClass(WordCount.class);
 
+        //设置输入文件路径
         FileInputFormat.setInputPaths(job, new Path(args[0]));
 
+        //设置map相关
         job.setMapperClass(MyMapper.class);
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(LongWritable.class);
 
+        //设置reduce相关
         job.setReducerClass(MyReduce.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(LongWritable.class);
 
+        //设置combiner，在map端执行一次reduce
+        job.setCombinerClass(MyReduce.class);
+
+        //设置输出路径
         FileOutputFormat.setOutputPath(job,new Path(args[1]));
 
         System.exit(job.waitForCompletion(true) ? 0 : 1);
