@@ -53,7 +53,7 @@ public class HDFSApp {
      */
     @Test
     public void cat() throws IOException {
-        FSDataInputStream inputStream = fileSystem.open(new Path("/hdfs/api/test.txt"));
+        FSDataInputStream inputStream = fileSystem.open(new Path("/fz.txt"));
         IOUtils.copyBytes(inputStream, System.out, 1024);
         inputStream.close();
     }
